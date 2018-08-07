@@ -20,7 +20,7 @@ data/S0iUubfz/63444e131f99493b9dcc951e315ad175/temperature/int
 data/S0iUubfz/63444e131f99493b9dcc951e315ad175/position/string
 ```
 
-- 对于设备上线、下线事件，推送平台的处理方式和处理设备数据一样，会在mqtt集群上以`event/{productKey}/{deviceKey}/{connect|disconnect|online}`形式的topicpublish
+- 对于设备上线、下线事件，推送平台的处理方式和处理设备数据一样，会在mqtt集群上以`event/{productKey}/{deviceKey}/{connect|disconnect|online}`形式的topic publish. topic的示例如下所示。
 
 ```
 event/S0iUubfz/63444e131f99493b9dcc951e315ad175/connect
@@ -28,7 +28,7 @@ event/S0iUubfz/63444e131f99493b9dcc951e315ad175/disconnect
 event/S0iUubfz/63444e131f99493b9dcc951e315ad175/online
 ```
 
-- 对于命令响应事件，会在mqtt集群上以`cmd/{productKey}/{deviceKey}/{commandId}`形式的topic publish
+- 对于命令响应事件，会在mqtt集群上以`cmd/{productKey}/{deviceKey}/{commandId}`形式的topic publish，topic的示例如下所示。
 
 ```
 cmd/S0iUubfz/63444e131f99493b9dcc951e315ad175/0823b250f0f74a80911f7206b6d1ed14
