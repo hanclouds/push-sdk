@@ -17,6 +17,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -27,15 +28,9 @@ import java.util.List;
  */
 public class PushClientImpl implements PushClient {
 
-    private static Logger logger = LoggerFactory.getLogger(PushClientImpl.class);
-
-    private MqttClient mqttClient = null;
-    private String secret = null;
-
     private final static int AES_KEY_SIZE = 16;
     private final static String AES_CBC = "AES/CBC/PKCS5Padding";
     private final static String CHARSET_UTF8 = "utf-8";
-
     /**
      * the api url used to request the subscribe token
      */
@@ -48,14 +43,16 @@ public class PushClientImpl implements PushClient {
      * the push server address with tcp
      */
     private final static String PUSH_SERVER_ADDRESS_TCP = "tcp://push.hanclouds.com:3883";
-
     private final static int PUSH_TRANSPORT_TCP = 0;
     private final static int PUSH_TRANSPORT_WSS = 1;
-
+    private static Logger logger = LoggerFactory.getLogger(PushClientImpl.class);
+    private MqttClient mqttClient = null;
+    private String secret = null;
 
     @Override
     public boolean subscribe(String productKey, String queryKey, String querySecret, List<String> filters, PushCallback callback, int transType, boolean secure) {
         if (mqttClient != null) {
+            logger.warn("the subscribe client start disconnect");
             disconnect();
         }
 
@@ -104,6 +101,7 @@ public class PushClientImpl implements PushClient {
                 @Override
                 public void connectionLost(Throwable cause) {
                     disconnect();
+                    System.out.println("the subscribe client start disconnect" + "      cause:" + cause.getMessage());
                     callback.onDisconnected();
                 }
 
@@ -266,7 +264,7 @@ public class PushClientImpl implements PushClient {
             secret = secret.substring(0, AES_KEY_SIZE);
         }
         try {
-            SecretKeySpec key = new SecretKeySpec(secret.getBytes(CHARSET_UTF8), "AES");
+            SecretKeySpec key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "AES");
             Cipher cipher = Cipher.getInstance(AES_CBC);
             byte[] ivBytes = new byte[16];
             System.arraycopy(content, 0, ivBytes, 0, 16);
